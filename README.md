@@ -1,30 +1,87 @@
-# Quote App - Full-Stack Docker Demo
+# Quote App
 
-A simple full-stack application built with React.js, FastAPI, and Docker. This project demonstrates how to containerize and connect a frontend and backend service using Docker Compose.
+A full-stack application with React frontend and FastAPI backend.
 
-![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=for-the-badge&logo=fastapi)
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+## Project Structure
 
-## Getting Started
+```
+quote-app/
+├── backend/          # FastAPI backend
+├── frontend/         # React frontend
+├── docker-compose.yml
+└── .github/workflows/ci.yml
+```
+
+## Development Setup
 
 ### Prerequisites
+- Docker and Docker Compose
+- Node.js (for local development)
+- Python 3.11+ (for local development)
 
-* Docker & Docker Compose
+### Running with Docker
 
-### Installation
+1. **Build and start all services:**
+   ```bash
+   docker-compose up --build
+   ```
 
-1.  Clone the repository:
-    ```sh
-    git clone [https://github.com/your-username/quote-app.git](https://github.com/your-username/quote-app.git)
-    cd quote-app
-    ```
+2. **Run frontend linting:**
+   ```bash
+   docker-compose run --rm frontend npm run lint
+   ```
 
-2.  Build and run the containers in detached mode:
-    ```sh
-    docker-compose up --build -d
-    ```
+3. **Run frontend tests:**
+   ```bash
+   docker-compose run --rm frontend npm test -- --watchAll=false
+   ```
 
-3.  The application will be available at:
-    * Frontend (React): `http://localhost:3000`
-    * Backend API Docs: `http://localhost:8000/docs`
+4. **Check frontend formatting:**
+   ```bash
+   docker-compose run --rm frontend npx prettier --check .
+   ```
+
+5. **Run backend linting:**
+   ```bash
+   docker-compose run --rm backend flake8 .
+   ```
+
+6. **Run backend tests:**
+   ```bash
+   docker-compose run --rm backend pytest
+   ```
+
+### Local Development
+
+#### Frontend
+```bash
+cd frontend
+npm install
+npm start
+```
+
+#### Backend
+```bash
+cd backend
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+
+## CI/CD
+
+The project includes GitHub Actions CI pipeline that:
+- Builds Docker images
+- Runs linting (ESLint, Flake8)
+- Checks code formatting (Prettier, Black)
+- Runs tests (Jest, Pytest)
+
+## Recent Fixes
+
+- **Fixed npm not found error**: Updated frontend Dockerfile to use Node.js instead of nginx for development/CI
+- **Updated CI syntax**: Changed from `docker compose` to `docker-compose` for compatibility
+- **Created Dockerfile.dev**: Separate Dockerfile for development that includes Node.js tools
+
+## Services
+
+- **Frontend**: React app running on port 3000
+- **Backend**: FastAPI app running on port 8000
