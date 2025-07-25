@@ -1,0 +1,37 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Build Docker images
+        run: docker-compose build
+
+      # --- Backend Checks --- #
+      - name: Lint with Flake8
+        run: docker-compose run -rm backend flake8 .
+
+      - name: Check formatting with Black
+        run: docker-compose run -rm backend black --check .
+
+      - name: Run Backend tests
+        run: docker-compose run -rm backend pytest
+
+      # --- Frontend Checks --- #
+      - name: Lint with ESLint
+        run: docker-compose run --rm frontend npm run lint
+
+      - name: Check formatting with Prettier
+        run: docker-compose run --rm frontend npx prettier --check .
+
+      - name: Run Frontend Tests
+        run: docker-compose run --rm frontend npm test -- --watchAll=false

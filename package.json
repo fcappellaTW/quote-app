@@ -1,0 +1,22 @@
+{
+  "name": "quote-app",
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "husky install",
+    "lint": "npm run lint --prefix frontend",
+    "format": "npm run format --prefix frontend",
+    "test": "npm run test --prefix frontend"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
+  },
+  "lint-staged": {
+    "frontend/**/*.{js,jsx}": [
+      "npm run lint --prefix frontend",
+      "npm run format --prefix frontend"
+    ],
+    "frontend/**/*.{json,css,md}": [
+      "npm run format --prefix frontend"
+    ]
+  }
+}
