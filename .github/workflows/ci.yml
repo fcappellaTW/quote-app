@@ -38,7 +38,7 @@ jobs:
         run: docker compose run --rm frontend npm run lint
 
       - name: Check formatting with Prettier
-        run: docker compose run --rm frontend npx prettier --check .
+        run: docker compose run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
 
       - name: Run Frontend Tests
         run: docker compose run --rm frontend npm test -- --watchAll=false

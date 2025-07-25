@@ -38,7 +38,7 @@ quote-app/
 
 4. **Check frontend formatting:**
    ```bash
-   docker-compose run --rm frontend npx prettier --check .
+   docker-compose run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
    ```
 
 5. **Run backend linting:**
