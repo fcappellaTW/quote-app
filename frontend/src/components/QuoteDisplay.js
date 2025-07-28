@@ -2,7 +2,7 @@ import React from 'react';
 import useQuote from '../hooks/useQuote';
 
 const QuoteDisplay = () => {
-  const { quote, fetchQuote, isLoading, error } = useQuote();
+  const { quote, fetchQuote } = useQuote();
 
   return (
     <div className="quote-display">
