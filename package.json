@@ -5,7 +5,7 @@
     "prepare": "husky install",
     "lint": "npm run lint --prefix frontend",
     "format": "npm run format --prefix frontend",
-    "test": "npm run test --prefix frontend"
+    "test": "npm run test --prefix frontend -- --watchAll=false --findRelatedTests --bail"
   },
   "devDependencies": {
     "husky": "^9.1.7"
@@ -14,7 +14,7 @@
     "frontend/**/*.{js,jsx}": [
       "npm run lint --prefix frontend",
       "npm run format --prefix frontend",
-      "npm run test --prefix frontend"
+      "npm run test --prefix frontend -- --watchAll=false --findRelatedTests --bail"
     ],
     "frontend/**/*.{json,css,md}": [
       "npm run format --prefix frontend"
