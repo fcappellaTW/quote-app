@@ -22,6 +22,14 @@ describe('ThemeContext', () => {
     });
 
     localStorage.removeItem('theme');
+
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  it('should throw an error if used outside of ThemeProvider', () => {
+    expect(() => {
+      render(<TestComponent />);
+    }).toThrow('useTheme must be used within a ThemeProvider');
   });
 
   it('should render children', () => {
@@ -75,6 +83,30 @@ describe('ThemeContext', () => {
 
     expect(document.body).toHaveClass('dark');
     expect(document.body).not.toHaveClass('light');
+  });
+
+  it('should throw an error if localStorage is not available on toggle theme', () => {
+    const originalLocalStorage = localStorage;
+
+    render(
+      <ThemeProvider>
+        <TestComponent />
+      </ThemeProvider>,
+    );
+
+    Object.defineProperty(window, 'localStorage', {
+      value: undefined,
+    });
+
+    const button = screen.getByRole('button', { name: 'Toggle Theme' });
+
+    expect(() => {
+      fireEvent.click(button);
+    }).toThrow('Error saving theme to localStorage');
+
+    Object.defineProperty(window, 'localStorage', {
+      value: originalLocalStorage,
+    });
   });
 
   it('should toggle theme', () => {

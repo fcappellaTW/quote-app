@@ -22,7 +22,7 @@ export const ThemeProvider = ({ children }) => {
     try {
       localStorage.setItem('theme', theme);
     } catch (error) {
-      console.error('Error saving theme to localStorage:', error);
+      throw new Error('Error saving theme to localStorage:', error);
     }
   }, [theme]);
 

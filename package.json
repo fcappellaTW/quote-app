@@ -5,12 +5,17 @@
     "prepare": "husky install",
     "lint": "npm run lint --prefix frontend",
     "format": "npm run format --prefix frontend",
-    "test": "npm run test --prefix frontend -- --watchAll=false --findRelatedTests --bail"
+    "test": "npm run test --prefix frontend -- --watchAll=false --coverage"
   },
   "devDependencies": {
     "husky": "^9.1.7"
   },
   "lint-staged": {
+    "backend/**/*.py": [
+      "python -m black --check --diff backend",
+      "python -m flake8 backend",
+      "python -m pytest --lf --tb=short"
+    ],
     "frontend/**/*.{js,jsx}": [
       "npm run lint --prefix frontend",
       "npm run format --prefix frontend",
