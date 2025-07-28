@@ -5,6 +5,7 @@ frontend/node_modules
 backend/venv
 /.pnp
 .pnp.js
+__pycache__
 
 # env
 *.env

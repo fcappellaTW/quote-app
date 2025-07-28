@@ -16,14 +16,14 @@ blockquote {
   font-style: italic;
   margin: 20px 0;
   padding: 20px;
-  border-left: 4px solid #007bff;
+  border-left: 4px solid #ff9f43;
   background-color: #f8f9fa;
   border-radius: 4px;
   max-width: 600px;
 }
 
 button {
-  background-color: #007bff;
+  background: linear-gradient(#c44569, #ff9f43);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -31,11 +31,12 @@ button {
   cursor: pointer;
   font-size: 16px;
   margin-top: 20px;
-  transition: background-color 0.3s;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #0056b3;
+  opacity: 0.9;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 button:active {

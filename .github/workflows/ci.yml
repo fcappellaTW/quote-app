@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build Docker images
-        run: docker compose build
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build
 
       # --- Backend Checks --- #
       - name: Lint with Flake8
@@ -35,10 +35,10 @@ jobs:
 
       # --- Frontend Checks --- #
       - name: Lint with ESLint
-        run: docker compose run --rm frontend npm run lint
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm run lint
 
       - name: Check formatting with Prettier
-        run: docker compose run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
 
       - name: Run Frontend Tests
-        run: docker compose run --rm frontend npm test -- --watchAll=false
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm test -- --watchAll=false
