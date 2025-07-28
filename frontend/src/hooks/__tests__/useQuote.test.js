@@ -43,7 +43,7 @@ describe('useQuote', () => {
       author: 'Error',
     });
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe(networkError);
+    expect(result.current.error).toBe(networkError.message);
   });
 
   it('should set loading state correctly', async () => {

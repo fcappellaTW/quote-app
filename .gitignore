@@ -13,7 +13,9 @@ frontend/.env
 backend/.env
 
 # testing
-/coverage
+coverage
+.pytest_cache
+.coverage
 
 # production
 /build
