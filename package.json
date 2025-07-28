@@ -13,7 +13,8 @@
   "lint-staged": {
     "frontend/**/*.{js,jsx}": [
       "npm run lint --prefix frontend",
-      "npm run format --prefix frontend"
+      "npm run format --prefix frontend",
+      "npm run test --prefix frontend"
     ],
     "frontend/**/*.{json,css,md}": [
       "npm run format --prefix frontend"

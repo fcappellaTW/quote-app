@@ -2,7 +2,7 @@ import React from 'react';
 import useQuote from '../hooks/useQuote';
 
 const QuoteDisplay = () => {
-  const { quote, fetchQuote } = useQuote();
+  const { quote, fetchQuote, isLoading, error } = useQuote();
 
   return (
     <div className="quote-display">
@@ -10,7 +10,10 @@ const QuoteDisplay = () => {
       <blockquote>
         "{quote.text}"<footer> - {quote.author}</footer>
       </blockquote>
-      <button onClick={fetchQuote}>Get New Quote</button>
+      {error && <p>{error}</p>}
+      <button onClick={fetchQuote} disabled={isLoading}>
+        Get New Quote
+      </button>
     </div>
   );
 };

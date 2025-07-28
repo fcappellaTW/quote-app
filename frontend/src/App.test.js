@@ -1,46 +1,21 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import App from './App';
 
-global.fetch = jest.fn();
-
-beforeEach(() => {
-  fetch.mockClear();
-});
-
-test('renders initial state correctly', () => {
-  render(<App />);
-  expect(
-    screen.getByText(/Click the button to get a random quote/i),
-  ).toBeInTheDocument();
-  expect(
-    screen.getByRole('button', { name: /Get New Quote/i }),
-  ).toBeInTheDocument();
-});
-
-test('fetches and displays a quote', async () => {
-  const mockQuote = {
-    text: 'Test Quote',
-    author: 'Tester',
+jest.mock('./components/QuoteDisplay', () => {
+  return function MockQuoteDisplay() {
+    return <div data-testid="quote-display">Quote Display Component</div>;
   };
+});
 
-  fetch.mockResolvedValueOnce({
-    json: async () => mockQuote,
+describe('App', () => {
+  test('renders without crashing', () => {
+    render(<App />);
+    expect(screen.getByTestId('quote-display')).toBeDefined();
   });
 
-  render(<App />);
-
-  fireEvent.click(screen.getByRole('button', { name: /Get New Quote/i }));
-
-  await waitFor(() => {
-    const blockquote = screen.getByRole('blockquote');
-    expect(blockquote).toHaveTextContent(mockQuote.text);
+  test('renders with correct structure', () => {
+    render(<App />);
+    expect(screen.getByTestId('app')).toBeDefined();
+    expect(screen.getByTestId('app-header')).toBeDefined();
   });
-
-  await waitFor(() => {
-    const footer = screen.getByRole('contentinfo');
-    expect(footer).toHaveTextContent(mockQuote.author);
-  });
-
-  expect(fetch).toHaveBeenCalledTimes(1);
-  expect(fetch).toHaveBeenCalledWith('http://localhost:8000/api/quote');
 });

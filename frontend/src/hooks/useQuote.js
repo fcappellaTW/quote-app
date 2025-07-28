@@ -18,7 +18,6 @@ const useQuote = () => {
       const data = await response.json();
       setQuote(data);
     } catch (error) {
-      console.error('Error fetching quote:', error);
       setQuote({ text: 'Could not connect to the API.', author: 'Error' });
       setError(error);
     } finally {
