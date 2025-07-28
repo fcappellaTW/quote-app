@@ -13,17 +13,43 @@ const TestComponent = () => {
 };
 
 describe('ThemeContext', () => {
+  let consoleErrorSpy;
+  let localStorageMock;
+
   beforeEach(() => {
     Object.defineProperty(window, 'matchMedia', {
       writable: true,
       value: jest.fn().mockImplementation(query => ({
         matches: false,
+        media: query,
+        onchange: null,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+        addEventListener: jest.fn(),
+        removeEventListener: jest.fn(),
+        dispatchEvent: jest.fn(),
       })),
     });
 
-    localStorage.removeItem('theme');
+    localStorageMock = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+      removeItem: jest.fn(),
+      clear: jest.fn(),
+    };
 
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    Object.defineProperty(window, 'localStorage', {
+      value: localStorageMock,
+      writable: true,
+    });
+
+    window.localStorage.removeItem('theme');
+
+    consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    consoleErrorSpy.mockRestore();
   });
 
   it('should throw an error if used outside of ThemeProvider', () => {
@@ -53,7 +79,7 @@ describe('ThemeContext', () => {
   });
 
   it('should load the theme from localStorage', () => {
-    localStorage.setItem('theme', 'dark');
+    localStorageMock.getItem.mockReturnValue('dark');
 
     render(
       <ThemeProvider>
@@ -85,8 +111,8 @@ describe('ThemeContext', () => {
     expect(document.body).not.toHaveClass('light');
   });
 
-  it('should throw an error if localStorage is not available on toggle theme', () => {
-    const originalLocalStorage = localStorage;
+  it('should handle localStorage error on toggle theme', () => {
+    const originalLocalStorage = window.localStorage;
 
     render(
       <ThemeProvider>
@@ -110,8 +136,6 @@ describe('ThemeContext', () => {
   });
 
   it('should toggle theme', () => {
-    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
-
     render(
       <ThemeProvider>
         <TestComponent />
@@ -126,8 +150,6 @@ describe('ThemeContext', () => {
 
     expect(screen.getByText('Actual theme: dark')).toBeDefined();
     expect(document.body).toHaveClass('dark');
-    expect(setItemSpy).toHaveBeenCalledWith('theme', 'dark');
-
-    setItemSpy.mockRestore();
+    expect(localStorageMock.setItem).toHaveBeenCalledWith('theme', 'dark');
   });
 });
