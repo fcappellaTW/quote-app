@@ -16,14 +16,14 @@ blockquote {
   font-style: italic;
   margin: 20px 0;
   padding: 20px;
-  border-left: 4px solid #ff9f43;
-  background-color: #f8f9fa;
+  border-left: 4px solid var(--color-border);
+  background-color: var(--color-card-background);
   border-radius: 4px;
   max-width: 600px;
 }
 
 button {
-  background: linear-gradient(#c44569, #ff9f43);
+  background: linear-gradient(var(--color-accent), var(--color-border));
   color: white;
   border: none;
   padding: 12px 24px;

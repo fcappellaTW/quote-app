@@ -1,3 +1,21 @@
+:root {
+  --color-background: #f8f9fa;
+  --color-text-primary: #212529;
+  --color-text-secondary: #6c757d;
+  --color-card-background: #ffffff;
+  --color-border: #c44569;
+  --color-accent: #ff6b9d;
+}
+
+body.dark {
+  --color-background: #121212;
+  --color-text-primary: #e9ecef;
+  --color-text-secondary: #adb5bd;
+  --color-card-background: #1e1e1e;
+  --color-border: #ff9f43;
+  --color-accent: #c44569;
+}
+
 body {
   margin: 0;
   font-family:
@@ -5,6 +23,11 @@ body {
     'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: var(--color-background);
+  color: var(--color-text-primary);
+  transition:
+    background-color 0.3s ease-in-out,
+    color 0.3s ease-in-out;
 }
 
 code {
