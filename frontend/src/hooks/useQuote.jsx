@@ -19,7 +19,7 @@ const useQuote = () => {
       setQuote(data);
     } catch (error) {
       setQuote({ text: 'Could not connect to the API.', author: 'Error' });
-      setError(error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
