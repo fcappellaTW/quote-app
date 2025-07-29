@@ -14,7 +14,7 @@
     "backend/**/*.py": [
       "python -m ruff format",
       "python -m ruff check --fix",
-      "python -m pytest"
+      "python -m pytest backend/tests/"
     ],
     "frontend/**/*.{js,jsx}": [
       "npm run lint --prefix frontend",
