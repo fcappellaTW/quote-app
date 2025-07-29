@@ -19,6 +19,7 @@
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{js,jsx}\" \"*.{js,jsx,json}\""
   },
+  "proxy": "http://backend:8000",
   "eslintConfig": {
     "extends": [
       "react-app",
