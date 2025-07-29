@@ -1,0 +1,20 @@
+[tool.ruff]
+line-length = 88
+
+exclude = [
+    ".venv",
+    "venv",
+    ".git",
+    "__pycache__",
+    "build",
+    "dist",
+    "node_modules"
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = ["E203"]
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["backend/tests"]

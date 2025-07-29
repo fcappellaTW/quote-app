@@ -17,7 +17,8 @@ def test_read_quote_api_returns_json():
 
 
 def test_read_quote_api_returns_correct_structure():
-    """Test that the /api/quote endpoint returns a JSON response with the correct structure"""
+    """Test that the /api/quote endpoint returns a JSON response with the
+    correct structure"""
     response = client.get("/api/quote")
     data = response.json()
     assert "author" in data
