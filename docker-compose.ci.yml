@@ -2,3 +2,5 @@ services:
   frontend:
     build:
       target: builder
+    volumes:
+      - ./.eslintignore:/app/.eslintignore
