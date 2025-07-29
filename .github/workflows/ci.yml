@@ -24,11 +24,11 @@ jobs:
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build
 
       # --- Backend Checks --- #
-      - name: Lint with Flake8
-        run: docker compose run --rm backend flake8 .
+      - name: Check formatting with Ruff
+        run: docker compose run --rm backend ruff format --check .
 
-      - name: Check formatting with Black
-        run: docker compose run --rm backend black --check .
+      - name: Lint with Ruff
+        run: docker compose run --rm backend ruff check .
 
       - name: Run Backend tests
         run: docker compose run --rm backend pytest

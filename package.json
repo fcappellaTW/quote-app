@@ -12,9 +12,9 @@
   },
   "lint-staged": {
     "backend/**/*.py": [
-      "python -m black --check --diff backend",
-      "python -m flake8 backend",
-      "python -m pytest --lf --tb=short"
+      "python -m ruff format",
+      "python -m ruff check --fix",
+      "python -m pytest"
     ],
     "frontend/**/*.{js,jsx}": [
       "npm run lint --prefix frontend",
