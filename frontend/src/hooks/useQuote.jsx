@@ -13,8 +13,7 @@ const useQuote = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const apiURL = process.env.PYTHON_API_URL || 'http://localhost:8000';
-      const response = await fetch(`${apiURL}/api/quote`);
+      const response = await fetch('/api/quote');
       const data = await response.json();
       setQuote(data);
     } catch (error) {
