@@ -13,7 +13,7 @@ const useQuote = () => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await fetch('/api/quote');
+      const response = await fetch('/api/v1/quote');
       const data = await response.json();
       setQuote(data);
     } catch (error) {

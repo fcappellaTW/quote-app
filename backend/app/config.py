@@ -1,0 +1,1 @@
+QUOTES_RATE_LIMIT = "2/second"

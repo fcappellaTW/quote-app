@@ -1,28 +1,40 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
+from slowapi import _rate_limit_exceeded_handler
 
-from .routers import quotes
+from app.routers import quotes
+from app.dependencies import limiter
 
-limiter = Limiter(key_func=get_remote_address)
 
-app = FastAPI()
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+def create_app():
+    """
+    Create a FastAPI app with the following features:
+    - Rate limiting
+    - CORS
+    - API routes
+    """
+    app = FastAPI()
 
-origins = [
-    "http://localhost:3000",
-    "http://localhost",
-]
+    app.state.limiter = limiter
+    app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+    origins = [
+        "http://localhost:3000",
+        "http://localhost",
+    ]
 
-app.include_router(quotes.router, prefix="/api")
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    app.include_router(quotes.router, prefix="/api/v1")
+
+    return app
+
+
+app = create_app()
