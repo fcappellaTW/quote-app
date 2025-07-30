@@ -9,7 +9,7 @@ COPY requirements.txt requirements-dev.txt ./
 
 RUN pip install --no-cache-di -r requirements-dev.txt
 
-COPY ./app /app/app
+COPY . .
 
 FROM python:3.11-slim as production
 
