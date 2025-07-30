@@ -1,4 +1,15 @@
-import sys
-import os
+import pytest
+from fastapi.testclient import TestClient
+from app.main import create_app
+from app.dependencies import limiter
 
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+@pytest.fixture(scope="function")
+def client():
+    """
+    Create a test client for each function in the test suite.
+    """
+    app = create_app()
+    yield TestClient(app)
+
+    limiter.reset()
