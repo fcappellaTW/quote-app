@@ -1,11 +1,20 @@
-import { renderHook, act } from '@testing-library/react';
-
+import { render, screen, renderHook, act } from '@testing-library/react';
+import { Toaster } from 'react-hot-toast';
 import useQuote from '../useQuote';
 
 global.fetch = jest.fn();
 
 describe('useQuote', () => {
   beforeEach(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation(query => ({
+        matches: false,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+      })),
+    });
+
     jest.clearAllMocks();
   });
 
@@ -27,7 +36,6 @@ describe('useQuote', () => {
       author: 'Test author',
     });
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe(null);
   });
 
   it('should handle network errors', async () => {
@@ -36,14 +44,14 @@ describe('useQuote', () => {
 
     const { result } = renderHook(() => useQuote());
 
+    render(<Toaster />);
+
     await act(async () => result.current.fetchQuote());
 
-    expect(result.current.quote).toEqual({
-      text: 'Could not connect to the API.',
-      author: 'Error',
-    });
+    const toastErrorElement = await screen.findByText(networkError.message);
+
     expect(result.current.isLoading).toBe(false);
-    expect(result.current.error).toBe(networkError.message);
+    expect(toastErrorElement).toBeDefined();
   });
 
   it('should set loading state correctly', async () => {

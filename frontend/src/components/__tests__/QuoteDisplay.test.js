@@ -1,23 +1,22 @@
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import QuoteDisplay from '../QuoteDisplay';
+import { Toaster } from 'react-hot-toast';
 
-jest.mock('../../hooks/useQuote');
-
-const mockUseQuote = require('../../hooks/useQuote').default;
+global.fetch = jest.fn();
 
 describe('QuoteDisplay', () => {
-  const mockFetchQuote = jest.fn();
-
   beforeEach(() => {
-    mockUseQuote.mockReturnValue({
-      quote: {
-        text: 'Click the button to get a random quote',
-        author: 'Dev',
-      },
-      isLoading: false,
-      error: null,
-      fetchQuote: mockFetchQuote,
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: jest.fn().mockImplementation(query => ({
+        matches: false,
+        addListener: jest.fn(),
+        removeListener: jest.fn(),
+      })),
     });
+
+    jest.clearAllMocks();
   });
 
   test('renders initial state correctly', () => {
@@ -32,55 +31,91 @@ describe('QuoteDisplay', () => {
     ).toBeDefined();
   });
 
-  test('calls fetchQuote when button is clicked', () => {
-    render(<QuoteDisplay />);
-
-    fireEvent.click(screen.getByRole('button', { name: /Get New Quote/i }));
-
-    expect(mockFetchQuote).toHaveBeenCalledTimes(1);
-  });
-
-  test('displays loading state', () => {
-    mockUseQuote.mockReturnValue({
-      quote: { text: 'Test quote', author: 'Test' },
-      isLoading: true,
-      error: null,
-      fetchQuote: mockFetchQuote,
+  test('calls fetchQuote when button is clicked', async () => {
+    fetch.mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        text: 'Test quote',
+        author: 'Test author',
+      }),
     });
 
     render(<QuoteDisplay />);
 
-    const button = screen.getByRole('button');
+    const button = screen.getByRole('button', { name: /Get New Quote/i });
+
+    await act(async () => {
+      button.click();
+    });
+
+    expect(fetch).toHaveBeenCalledWith('/api/v1/quote');
+  });
+
+  test('displays loading state', async () => {
+    fetch.mockImplementation(
+      () =>
+        new Promise(resolve =>
+          setTimeout(
+            () =>
+              resolve({
+                ok: true,
+                json: async () => ({ text: 'Test', author: 'Test' }),
+              }),
+            100,
+          ),
+        ),
+    );
+
+    render(<QuoteDisplay />);
+
+    const button = screen.getByRole('button', { name: /Get New Quote/i });
+
+    await act(async () => {
+      button.click();
+    });
+
     expect(button.disabled).toBe(true);
   });
 
-  test('displays error message', () => {
-    mockUseQuote.mockReturnValue({
-      quote: { text: 'Error quote', author: 'Error' },
-      isLoading: false,
-      error: 'API Error',
-      fetchQuote: mockFetchQuote,
+  test('displays error message', async () => {
+    const networkError = new Error('Network error');
+    fetch.mockRejectedValue(networkError);
+
+    render(
+      <>
+        <Toaster position="top-left" /> <QuoteDisplay />
+      </>,
+    );
+
+    const button = screen.getByRole('button', { name: /Get New Quote/i });
+
+    await act(async () => {
+      button.click();
     });
 
-    render(<QuoteDisplay />);
+    const toastErrorElement = await screen.findByText(networkError.message);
 
-    expect(screen.getByText(/API Error/i)).toBeDefined();
+    expect(toastErrorElement).toBeDefined();
   });
 
-  test('displays fetched quote', () => {
+  test('displays fetched quote', async () => {
     const mockQuote = {
       text: 'Fetched quote',
       author: 'Author',
     };
 
-    mockUseQuote.mockReturnValue({
-      quote: mockQuote,
-      isLoading: false,
-      error: null,
-      fetchQuote: mockFetchQuote,
+    fetch.mockResolvedValue({
+      ok: true,
+      json: async () => mockQuote,
     });
 
     render(<QuoteDisplay />);
+
+    const button = screen.getByRole('button', { name: /Get New Quote/i });
+
+    await act(async () => {
+      button.click();
+    });
 
     expect(screen.getByText(`"${mockQuote.text}"`)).toBeDefined();
     expect(screen.getByText(`- ${mockQuote.author}`)).toBeDefined();
