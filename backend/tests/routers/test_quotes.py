@@ -1,6 +1,8 @@
 import json
+from app.core.redis_client import redis_client
 
 API_ENDPOINT = "/api/v1/quote"
+
 
 def test_read_quote_api_returns_200(client):
     """Test that the /api/quote endpoint returns a 200 status code"""
@@ -34,11 +36,11 @@ def test_get_quote_with_cache_hit(client, mocker):
         "text": "A quote from Redis.",
     }
     cached_quote_json_string = json.dumps(cached_quote)
-    mock_redis = mocker.patch('app.routers.quotes.redis_client')
-    mock_redis.get.return_value = cached_quote_json_string
+
+    mocker.patch.object(redis_client, "lpop", return_value=cached_quote_json_string)
 
     response = client.get(API_ENDPOINT)
 
     assert response.status_code == 200
     assert response.json() == cached_quote
-    mock_redis.lpop.assert_called_once_with("quotes")
+    redis_client.lpop.assert_called_once_with("quotes")
