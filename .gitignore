@@ -6,6 +6,7 @@ backend/venv
 /.pnp
 .pnp.js
 __pycache__
+.ruff_cache
 
 # env
 *.env
