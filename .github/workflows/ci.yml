@@ -25,20 +25,20 @@ jobs:
 
       # --- Backend Checks --- #
       - name: Check formatting with Ruff
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend ruff format --check .
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml --no-dotenv run --rm backend ruff format --check .
 
       - name: Lint with Ruff
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend ruff check .
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml --no-dotenv run --rm backend ruff check .
 
       - name: Run Backend tests
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend pytest
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml --no-dotenv run --rm backend pytest
 
       # --- Frontend Checks --- #
       - name: Lint with ESLint
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm run lint
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml --no-dotenv run --rm frontend npm run lint
 
       - name: Check formatting with Prettier
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml --no-dotenv run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
 
       - name: Run Frontend Tests
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm test -- --watchAll=false
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml --no-dotenv run --rm frontend npm test -- --watchAll=false
