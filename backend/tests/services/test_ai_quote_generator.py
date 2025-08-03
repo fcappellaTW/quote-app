@@ -1,6 +1,7 @@
 import json
-import boto3 # noqa: F401
+import boto3  # noqa: F401
 from app.services import ai_quote_generator
+
 
 def test_generate_quote_with_quotes_successfully(mocker):
     """
@@ -12,19 +13,20 @@ def test_generate_quote_with_quotes_successfully(mocker):
     """
     mocker.patch(
         "app.services.ai_quote_generator.FALLBACK_QUOTES",
-        [{"text": "Example quote", "author": "Author Example"}]
+        [{"text": "Example quote", "author": "Author Example"}],
     )
 
     mock_bedrock_client = mocker.patch("boto3.client").return_value
 
-    fake_llm_completion = json.dumps([
-        {"quote": "Example quote 1", "author": "Author Example 1"},
-        {"quote": "Example quote 2", "author": "Author Example 2"},
-    ])
+    fake_llm_completion = json.dumps(
+        [
+            {"quote": "Example quote 1", "author": "Author Example 1"},
+            {"quote": "Example quote 2", "author": "Author Example 2"},
+            {"quote": "Example quote 3", "author": "Author Example 3"},
+        ]
+    )
 
-    fake_bedrock_response = {
-        "body": json.dumps({"completion": fake_llm_completion})
-    }
+    fake_bedrock_response = {"body": json.dumps({"completion": fake_llm_completion})}
 
     mock_body = mocker.MagicMock()
     mock_body.read.return_value = fake_bedrock_response["body"]
