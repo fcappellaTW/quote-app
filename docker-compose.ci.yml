@@ -6,5 +6,5 @@ services:
     build:
       target: builder
     volumes:
-      - ./.eslintignore:/app/.eslintignore
+      - ./.eslintignore:/app/.eslintignore``
       - ./.prettierrc.json:/app/.prettierrc.json

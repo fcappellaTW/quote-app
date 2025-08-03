@@ -20,9 +20,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Create Dummy .env file for CI
-        run: touch backend/.env
-
       - name: Build Docker images
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build
 
@@ -35,6 +32,10 @@ jobs:
 
       - name: Run Backend tests
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend pytest
+        env:
+            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            AWS_REGION: ${{ secrets.AWS_REGION }}
 
       # --- Frontend Checks --- #
       - name: Lint with ESLint
