@@ -4,6 +4,7 @@ pytest
 pytest-cov
 pytest-asyncio
 pytest-mock
+pytest-dotenv
 httpx
 
 ruff

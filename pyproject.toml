@@ -19,3 +19,5 @@ ignore = ["E203"]
 pythonpath = ["backend"]
 testpaths = ["backend/tests"]
 asyncio_mode = "auto"
+markers = ["integration: make tests as integration tests (slow, requires network and credentials)"]
+addopts = "-m 'not integration'"

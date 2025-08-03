@@ -13,3 +13,11 @@ def client():
     yield TestClient(app)
 
     limiter.reset()
+
+
+def pytest_sessionfinish(session, exitstatus):
+    """
+    Custom hook to handle pytest exit status.
+    """
+    if exitstatus == pytest.ExitCode.NO_TESTS_COLLECTED:
+        session.exitstatus = pytest.ExitCode.OK
