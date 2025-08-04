@@ -1,8 +1,15 @@
 FROM node:18-alpine as builder
+
 WORKDIR /app
-COPY package*.json ./
+
+COPY ./.eslintignore ./.prettierrc.json ./
+
+COPY frontend/package*.json ./
+
 RUN npm install
-COPY . .
+
+COPY frontend/ .
+
 RUN npm run build
 
 FROM nginx:1.25-alpine
