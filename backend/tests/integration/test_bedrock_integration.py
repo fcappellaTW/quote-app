@@ -19,8 +19,8 @@ def test_bedrock_api_call_returns_valid_structure():
 
     first_quote = generated_quotes[0]
     assert isinstance(first_quote, dict)
-    assert "quote" in first_quote
+    assert "text" in first_quote
     assert "author" in first_quote
-    assert isinstance(first_quote["quote"], str)
+    assert isinstance(first_quote["text"], str)
     assert isinstance(first_quote["author"], str)
     assert len(first_quote["text"]) > 0
