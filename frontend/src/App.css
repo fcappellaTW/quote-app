@@ -42,3 +42,39 @@ button:hover {
 button:active {
   transform: translateY(1px);
 }
+
+.quote-display {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  flex-grow: 1;
+
+  padding: 1rem;
+  width: 100%;
+}
+
+.quote-disclaimer {
+  min-height: 4rem;
+  width: 100%;
+  padding: 1rem;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.quote-disclaimer.is-hidden {
+  opacity: 0;
+}
+
+.quote-disclaimer p {
+  font-size: 0.75rem; /* 12px */
+  color: #4b5563; /* gray-600 */
+  max-width: 42rem;
+}

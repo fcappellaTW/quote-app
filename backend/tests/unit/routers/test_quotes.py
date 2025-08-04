@@ -49,6 +49,7 @@ def test_get_quote_with_cache_hit(client, mocker):
     cached_quote = {
         "author": "Cached Author",
         "text": "A quote from Redis.",
+        "is_ai_generated": True,
     }
     cached_quote_json_string = json.dumps(cached_quote)
 
