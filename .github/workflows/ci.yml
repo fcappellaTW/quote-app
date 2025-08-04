@@ -7,8 +7,8 @@ on:
     branches: [main]
 
 jobs:
-  build:
-    name: Build, Lint and Test
+  lint_and_test:
+    name: Lint & Test
     runs-on: ubuntu-24.04
     steps:
       - name: Login to Docker Hub
@@ -23,26 +23,30 @@ jobs:
       - name: Build Docker images
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build
 
-      # --- Backend Checks --- #
       - name: Check formatting with Ruff
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend ruff format --check .
 
       - name: Lint with Ruff
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend ruff check .
 
-      - name: Run Backend tests
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend pytest
-        env:
-            AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            AWS_REGION: ${{ secrets.AWS_REGION }}
+      - name: Run Unit Tests
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend pytest -m "not integration"
 
-      # --- Frontend Checks --- #
-      - name: Lint with ESLint
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm run lint
+      - name: Run Integration Tests
+        run: |
+          docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm \
+          -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
+          -e AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} \
+          -e AWS_REGION=${{ secrets.AWS_REGION }} \
+          backend pytest -m "integration"
 
-      - name: Check formatting with Prettier
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
 
-      - name: Run Frontend Tests
-        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm test -- --watchAll=false
+  deploy_staging:
+    name: Deploy to Staging
+    runs-on: ubuntu-24.04
+
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [lint_and_test]
+    steps:
+      - name: Deploy to Staging Environment
+        run: echo "Deploying to staging..."

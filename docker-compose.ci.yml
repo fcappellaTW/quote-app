@@ -2,9 +2,7 @@ services:
   backend:
     build:
       target: development
+
   frontend:
     build:
       target: builder
-    volumes:
-      - ./.eslintignore:/app/.eslintignore``
-      - ./.prettierrc.json:/app/.prettierrc.json
