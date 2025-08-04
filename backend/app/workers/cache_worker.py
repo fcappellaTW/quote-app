@@ -1,8 +1,7 @@
-import os
+import json
 from app.services.ai_quote_generator import generate_ai_quotes
 from app.core.redis_client import redis_client
-
-REDIS_QUOTE_KEY = os.getenv("REDIS_QUOTE_KEY", "quotes")
+from app.config import REDIS_QUOTE_KEY
 
 
 def populate_cache_if_needed(minimum_count: int = 10):
@@ -11,7 +10,11 @@ def populate_cache_if_needed(minimum_count: int = 10):
     the minimum, invokes the AI service to generate new quotes and
     stores them in the cache.
     """
-    current_count = redis_client.llen(REDIS_QUOTE_KEY)
+    current_count = redis_client.scard(REDIS_QUOTE_KEY)
 
     if current_count < minimum_count:
-        generate_ai_quotes()
+        new_quotes = generate_ai_quotes()
+
+        if new_quotes:
+            serialized_quotes = [json.dumps(q) for q in new_quotes]
+            redis_client.sadd(REDIS_QUOTE_KEY, *serialized_quotes)

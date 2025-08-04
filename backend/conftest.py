@@ -2,6 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from app.main import create_app
 from app.dependencies import limiter
+from app.core.redis_client import redis_client
 
 
 @pytest.fixture(scope="function")
@@ -13,6 +14,7 @@ def client():
     yield TestClient(app)
 
     limiter.reset()
+    redis_client.flushdb()
 
 
 def pytest_sessionfinish(session, exitstatus):

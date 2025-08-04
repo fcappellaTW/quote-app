@@ -1,13 +1,10 @@
-import os
 import random
 import json
 from fastapi import APIRouter, Request
 from app.dependencies import limiter
-from app.config import QUOTES_RATE_LIMIT
+from app.config import QUOTES_RATE_LIMIT, REDIS_QUOTE_KEY
 from app.core.redis_client import redis_client
 from app.core.kb_loader import FALLBACK_QUOTES
-
-REDIS_QUOTE_KEY = os.getenv("REDIS_QUOTE_KEY", "quotes")
 
 router = APIRouter()
 
