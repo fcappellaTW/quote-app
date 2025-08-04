@@ -20,6 +20,10 @@ def get_random_quote(request: Request):
     cached_quote_string = redis_client.srandmember(REDIS_QUOTE_KEY)
 
     if cached_quote_string:
-        return json.loads(cached_quote_string)
+        quote_data = json.loads(cached_quote_string)
+        quote_data["is_ai_generated"] = True
+        return quote_data
 
-    return random.choice(FALLBACK_QUOTES)
+    quote_data = random.choice(FALLBACK_QUOTES)
+    quote_data["is_ai_generated"] = False
+    return quote_data

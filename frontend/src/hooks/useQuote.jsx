@@ -9,6 +9,7 @@ const useQuote = () => {
   const [quote, setQuote] = useState({
     text: 'Click the button to get a random quote',
     author: 'Dev',
+    is_ai_generated: false,
   });
 
   const [isLoading, setIsLoading] = useState(false);
