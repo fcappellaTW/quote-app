@@ -13,7 +13,8 @@ router = APIRouter()
 @limiter.limit(QUOTES_RATE_LIMIT)
 def get_random_quote(request: Request):
     """
-    Returns a single random quote from the static list.
+    Returns a single random quote from the Redis set.
+    If the set is empty, returns a random quote from the static list.
     This endpoint is rate-limited.
     """
     cached_quote_string = redis_client.srandmember(REDIS_QUOTE_KEY)
