@@ -23,16 +23,25 @@ jobs:
       - name: Build Docker images
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml build
 
-      - name: Check formatting with Ruff
+      - name: Backend - Check formatting with Ruff
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend ruff format --check .
 
-      - name: Lint with Ruff
+      - name: Frontend - Check formatting with Prettier
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npx prettier --check "src/**/*.{js,jsx}" "*.{js,jsx,json}"
+
+      - name: Backend - Lint with Ruff
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend ruff check .
 
-      - name: Run Unit Tests
+      - name: Frontend - Lint with ESLint
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm run lint
+
+      - name: Backend - Run Unit Tests
         run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm backend pytest -m "not integration"
 
-      - name: Run Integration Tests
+      - name: Frontend - Run Unit Tests
+        run: docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm frontend npm test -- --watchAll=false
+
+      - name: Backend - Run Integration Tests
         run: |
           docker compose -f docker-compose.yml -f docker-compose.ci.yml run --rm \
           -e AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} \
