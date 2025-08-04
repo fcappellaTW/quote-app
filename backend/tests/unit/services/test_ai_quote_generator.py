@@ -9,7 +9,6 @@ def test_generate_quote_with_quotes_successfully(mocker):
     1. Mocks the knowledge base to avoid file I/O.
     2. Mocks the Boto3 client to avoid network calls.
     3. Asserts that the structured JSON response from the LLM is parsed correctly.
-
     """
     mocker.patch(
         "app.services.ai_quote_generator.FALLBACK_QUOTES",
